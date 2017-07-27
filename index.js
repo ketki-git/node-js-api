@@ -91,8 +91,8 @@ server.get('/',(req, res)=>{
 });
 
 /**
- * Application listening to port 4000
+ * Application listening to port assigned by Heroku or 4000
  */
-server.listen(4000, function() {
-    console.log('API Webservice listening at http://localhost:4000');
+server.listen(process.env.PORT||4000, function() {
+    console.log('API Webservice listening at http://localhost:',(process.env.PORT||4000));
 });
