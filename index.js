@@ -38,17 +38,26 @@ server.use(restify.plugins.bodyParser());
 server.post('/',(req, res)=>{
     let validJson = true;
     let properties;
+    let errorMessage = "Could not decode request: JSON parsing failed";
 
     try{
-        if(req.body) properties = (JSON.parse(req.body)).payload;
-        else validJson = false;
+        if(req.contentType() != 'application/json') {
+            validJson = false;
+            errorMessage = "Could not decode request. Please ensure that the content-type of the POST data is 'application/json'"
+        }
+        else if(req.body) {
+            properties = req.body.payload;
+        }
+        else {
+            validJson = false;
+        }
     } catch(exception){
         validJson = false;
     }
 
     //if the JSON file is not valid, return with 400 error
     if(!validJson){
-        res.send(400, { "error" : "Could not decode request: JSON parsing failed"});
+        res.send(400, { "error" : errorMessage});
     } else {
         let results = [];
         properties.forEach((property)=> {
@@ -56,7 +65,7 @@ server.post('/',(req, res)=>{
             //For now, I am enforcing existence of 'type', 'workflow' and 'address' keys
             if(!property.type || !property.workflow || !property.address) {
                 validJson = false;
-                res.send(400, { "error" : "Could not decode request: JSON parsing failed"});
+                res.send(400, { "error" : errorMessage});
                 return;
             }
 
@@ -94,5 +103,5 @@ server.get('/',(req, res)=>{
  * Application listening to port assigned by Heroku or 4000
  */
 server.listen(process.env.PORT||4000, function() {
-    console.log('API Webservice listening at http://localhost:',(process.env.PORT||4000));
+    console.log('API Webservice listening at http://localhost:', (process.env.PORT||4000));
 });
