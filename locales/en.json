@@ -1,0 +1,5 @@
+{
+  "ERR_DEFAULT": "Could not decode request: JSON parsing failed",
+  "ERR_REQUIRED_KEYS" : "All the following keys must be present in the JSON Object: address, propertyTypeId, readyState, reference, shortId, status, type, workflow",
+  "ERR_MISSING_ARRAY" : "Missing array"
+}
